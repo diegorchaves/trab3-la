@@ -15,12 +15,13 @@ int matrizA [TAM][TAM], matrizB [TAM][TAM], matrizC [TAM][TAM];
 int estagio = 0;
 int botaoMultiplicarX0 = 60;
 int botaoMultiplicarY0 = 420;
-int botaoDeterminanteX0 = 200;
+int botaoDeterminanteX0 = 820;
 int tamanhoXbotoes = 110;
 int tamanhoYbotoes = 40;
 int tamanhoMatrizX = 100;
 int tamanhoMatrizY = 100;
 int espacoEntreMatrizes = 250;
+int espacoEntreBotoes = 50;
 int posicaoInicialMatrizA = 50;
 
 void imprimeMatriz (int matriz [TAM][TAM], int posicaoInicialMatriz) {
@@ -34,12 +35,30 @@ void imprimeMatriz (int matriz [TAM][TAM], int posicaoInicialMatriz) {
 
 void multiplicarMatriz (int matrizA [TAM][TAM], int matrizB [TAM][TAM], int matrizC [TAM][TAM]){
     int i, j, k;
-    for (i = 0; i < 3; i++){
-        for (j = 0; j < 3; j++){
+    for (i = 0; i < TAM; i++){
+        for (j = 0; j < TAM; j++){
             matrizC [i][j] = 0;
-            for (k = 0; k < 3; k++){
+            for (k = 0; k < TAM; k++){
                 matrizC [i][j] += matrizA [i][j] * matrizB [k][j];
             }
+        }
+    }
+}
+
+void somarMatriz (int matrizA [TAM][TAM], int matrizB [TAM][TAM], int matrizC [TAM][TAM]){
+    int i, j;
+    for (i = 0; i < TAM; i++){
+        for (j = 0; j < TAM; j++){
+            matrizC [i][j] = matrizA [i][j] + matrizB [i][j];
+        }
+    }
+}
+
+void subtrairMatriz (int matrizA [TAM][TAM], int matrizB [TAM][TAM], int matrizC [TAM][TAM]){
+    int i, j;
+    for (i = 0; i < TAM; i++){
+        for (j = 0; j < TAM; j++){
+            matrizC [i][j] = matrizA [i][j] - matrizB [i][j];
         }
     }
 }
@@ -113,6 +132,17 @@ void botaoDeterminante (){
     CV::text (botaoDeterminanteX0, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Determinante");
 }
 
+void botaoSomar (){
+    CV::rect (botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes, botaoMultiplicarY0, botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes);
+    CV::text (botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Somar");
+}
+
+void botaoSubtrair (){
+    CV::rect (botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0, botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes);
+    CV::text (botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Subtrair");
+}
+
+
 void render()
 {
     //Matriz AB -- estagio 0
@@ -125,11 +155,14 @@ void render()
     colchete2 ();
     sinalX ();
     botaoMultiplicar();
+    botaoSomar ();
+    botaoSubtrair ();
     botaoGerar ();
 
-    //Matriz C -- estagio 1
+    //Multiplicar -- estagio 1
     if (estagio == 1){
         textMatrizC ();
+        multiplicarMatriz (matrizA, matrizB, matrizC);
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
         colchete3 ();
         sinalIgual();
@@ -145,6 +178,24 @@ void render()
         botaoDeterminante();
         CV::text (750, 200, "Determinante = ");
         CV::text (900, 200, calcularDeterminante(matrizC));
+    }
+
+    //Somar - estagio 3
+    if (estagio == 3){
+        textMatrizC ();
+        somarMatriz (matrizA, matrizB, matrizC);
+        imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
+        colchete3 ();
+        sinalIgual();
+    }
+
+    //Subtrair - estagio 4
+    if (estagio == 4){
+        textMatrizC ();
+        subtrairMatriz (matrizA, matrizB, matrizC);
+        imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
+        colchete3 ();
+        sinalIgual();
     }
 }
 
@@ -177,13 +228,20 @@ void mouse(int button, int state, int wheel, int direction, int x, int y)
         if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 - 100 && y < botaoMultiplicarY0 - 100 + tamanhoYbotoes){
             gerarMatriz (matrizA);
             gerarMatriz (matrizB);
-            multiplicarMatriz (matrizA, matrizB, matrizC);
             estagio = 0;
         }
-        else if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes)
+        else if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
             estagio = 1;
-        else if (x > botaoDeterminanteX0 && x < botaoDeterminanteX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes)
+        }
+        else if (x > botaoDeterminanteX0 && x < botaoDeterminanteX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
             estagio = 2;
+        }
+        else if (x > botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
+            estagio = 3;
+        }
+        else if (x > botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
+            estagio = 4;
+        }
     }
 }
 
@@ -193,7 +251,5 @@ int main(void)
     srand (time(NULL));
     gerarMatriz (matrizA);
     gerarMatriz (matrizB);
-    multiplicarMatriz (matrizA, matrizB, matrizC);
-
     CV::run();
 }
