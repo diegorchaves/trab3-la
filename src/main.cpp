@@ -108,6 +108,15 @@ void sinalIgual (){
     CV::line (470, 95, 490, 95);
 }
 
+void sinalSoma (){
+    CV::line (220, 100, 240, 100);
+    CV::line (230, 90, 230, 110);
+}
+
+void sinalSubtrair (){
+    CV::line (220, 100, 240, 100);
+}
+
 void textMatrizAB (){
     CV::text(60, 200, "Matriz A");
     CV::text (320, 200, "Matriz B");
@@ -153,7 +162,6 @@ void render()
     colchete1 ();
     imprimeMatriz (matrizB, posicaoInicialMatrizA + espacoEntreMatrizes);
     colchete2 ();
-    sinalX ();
     botaoMultiplicar();
     botaoSomar ();
     botaoSubtrair ();
@@ -166,6 +174,7 @@ void render()
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
         colchete3 ();
         sinalIgual();
+        sinalX ();
         botaoDeterminante();
     }
 
@@ -186,6 +195,7 @@ void render()
         somarMatriz (matrizA, matrizB, matrizC);
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
         colchete3 ();
+        sinalSoma();
         sinalIgual();
     }
 
@@ -195,6 +205,7 @@ void render()
         subtrairMatriz (matrizA, matrizB, matrizC);
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
         colchete3 ();
+        sinalSubtrair ();
         sinalIgual();
     }
 }
