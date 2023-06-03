@@ -1,5 +1,5 @@
 #include <GL/glut.h>
-#include <GL/freeglut_ext.h> //callback da wheel do mouse.
+#include <GL/freeglut_ext.h>
 #include <time.h>
 #include <math.h>
 #include <stdio.h>
@@ -7,9 +7,8 @@
 #include "gl_canvas2d.h"
 #include "auxiliar.h"
 #define TAM 3
-//variaveis globais
 
-int screenWidth = 1000, screenHeight = 500; //largura e altura inicial da tela. Alteram com o redimensionamento de tela.
+int screenWidth = 1000, screenHeight = 500;
 int mouseX, mouseY;
 int matrizA [TAM][TAM], matrizB [TAM][TAM], matrizC [TAM][TAM];
 int estagio = 0;
@@ -152,10 +151,11 @@ void botaoSubtrair (){
 }
 
 
+
 void render()
 {
     //Matriz AB -- estagio 0
-    CV::clear(0,0,0);
+    CV::clear(0, 0, 0);
     CV::color(255, 255, 255);
     textMatrizAB ();
     imprimeMatriz (matrizA, posicaoInicialMatrizA);
@@ -184,6 +184,7 @@ void render()
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
         colchete3 ();
         sinalIgual();
+        sinalX ();
         botaoDeterminante();
         CV::text (750, 200, "Determinante = ");
         CV::text (900, 200, calcularDeterminante(matrizC));
@@ -210,19 +211,16 @@ void render()
     }
 }
 
-//funcao chamada toda vez que uma tecla for pressionada
+
 void keyboard(int key)
 {
-   //printf("\nTecla: %d" , key);
 }
-//funcao chamada toda vez que uma tecla for liberada
+
 void keyboardUp(int key)
 {
-   //printf("\nLiberou tecla: %d" , key);
 }
 
 void gerarMatriz (int matriz [TAM][TAM]){
-
     int i, j;
     for (i = 0; i < 3; i++){
         for (j = 0; j < 3; j++){
