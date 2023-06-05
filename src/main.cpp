@@ -23,10 +23,10 @@ int espacoEntreMatrizes = 250;
 int espacoEntreBotoes = 50;
 int posicaoInicialMatrizA = 50;
 
-void imprimeMatriz (int matriz [TAM][TAM], int posicaoInicialMatriz) {
+void imprimeMatriz (int matriz [TAM][TAM], int posicaoInicialMatriz){
     int i, j, offset = 50, posicaoY = 50;
-    for (i = 0; i < TAM; i++) {
-        for (j = 0; j < TAM; j++) {
+    for (i = 0; i < TAM; i++){
+        for (j = 0; j < TAM; j++){
             CV::text(posicaoInicialMatriz + i*offset, posicaoY + j*offset, matriz [i][j]);
         }
     }
@@ -154,7 +154,7 @@ void botaoSubtrair (){
 
 void render()
 {
-    //Matriz AB -- estagio 0
+    //Matriz AB -- estagio 0 -> nesse estagio sao impressas as matrizes A e B geradas aleatoriamente
     CV::clear(0, 0, 0);
     CV::color(255, 255, 255);
     textMatrizAB ();
@@ -167,7 +167,7 @@ void render()
     botaoSubtrair ();
     botaoGerar ();
 
-    //Multiplicar -- estagio 1
+    //Multiplicar -- estagio 1 -> esse estagio eh ativo caso o usuario clique no botao Multiplicar, imprime a matriz C resultante
     if (estagio == 1){
         textMatrizC ();
         multiplicarMatriz (matrizA, matrizB, matrizC);
@@ -178,7 +178,7 @@ void render()
         botaoDeterminante();
     }
 
-    //Determinante - estagio 2
+    //Determinante - estagio 2 -> caso o usuario multiplique, eh apresentado o botao de Determinante nesse estagio
     if (estagio == 2){
         textMatrizC ();
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
@@ -190,7 +190,7 @@ void render()
         CV::text (900, 200, calcularDeterminante(matrizC));
     }
 
-    //Somar - estagio 3
+    //Somar - estagio 3 -> caso o usuario clique em somar, eh impressa a matriz C resultante e o sinal de soma
     if (estagio == 3){
         textMatrizC ();
         somarMatriz (matrizA, matrizB, matrizC);
@@ -200,7 +200,7 @@ void render()
         sinalIgual();
     }
 
-    //Subtrair - estagio 4
+    //Subtrair - estagio 4 -> caso o usuario clique em subtrair, eh impressa a matriz C resultante e o sinal de subtracao
     if (estagio == 4){
         textMatrizC ();
         subtrairMatriz (matrizA, matrizB, matrizC);
@@ -211,7 +211,6 @@ void render()
     }
 }
 
-
 void keyboard(int key)
 {
 }
@@ -220,6 +219,7 @@ void keyboardUp(int key)
 {
 }
 
+//essa funcao gera as matrizes A e B aleatoriamente com valores entre -10 e 10
 void gerarMatriz (int matriz [TAM][TAM]){
     int i, j;
     for (i = 0; i < 3; i++){
@@ -228,31 +228,38 @@ void gerarMatriz (int matriz [TAM][TAM]){
         }
     }
 }
+
 //funcao para tratamento de mouse: cliques, movimentos e arrastos
 void mouse(int button, int state, int wheel, int direction, int x, int y)
 {
    //printf("\nmouse %d %d %d %d %d %d", button, state, wheel, direction,  x, y);
     if (state == 0){
-
+        //aqui faco o tratamento do botao de gerar matrizes
         if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 - 100 && y < botaoMultiplicarY0 - 100 + tamanhoYbotoes){
             gerarMatriz (matrizA);
             gerarMatriz (matrizB);
             estagio = 0;
         }
+        //aqui faco o tratamento do botao de multiplicar
         else if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
             estagio = 1;
         }
+        //aqui faco o tratamento do botao determinante
         else if (x > botaoDeterminanteX0 && x < botaoDeterminanteX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
             estagio = 2;
         }
+        //aqui faco o tratamento do botao de soma
         else if (x > botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
             estagio = 3;
         }
+        //e por fim, tratamento do botao de subtrair
         else if (x > botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
             estagio = 4;
         }
     }
 }
+
+
 
 int main(void)
 {
