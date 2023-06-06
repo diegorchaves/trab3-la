@@ -179,7 +179,7 @@ void render()
         botaoDeterminante();
     }
 
-    //Determinante - estagio 2 -> caso o usuario multiplique, eh apresentado o botao de Determinante nesse estagio
+    //Determinante - estagio 2 -> nesse estagio eh apresentado o botao de Determinante nesse estagio
     if (estagio == 2){
         textMatrizC ();
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
