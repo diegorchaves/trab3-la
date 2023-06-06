@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "gl_canvas2d.h"
 #include "auxiliar.h"
+#include <stdbool.h>
 #define TAM 3
 
 int screenWidth = 1000, screenHeight = 500;
@@ -15,7 +16,7 @@ int estagio = 0;
 int botaoMultiplicarX0 = 60;
 int botaoMultiplicarY0 = 420;
 int botaoDeterminanteX0 = 820;
-int tamanhoXbotoes = 110;
+int tamanhoXbotoes = 130;
 int tamanhoYbotoes = 40;
 int tamanhoMatrizX = 100;
 int tamanhoMatrizY = 100;
@@ -127,27 +128,27 @@ void textMatrizC (){
 
 void botaoGerar (){
     CV::rect (botaoMultiplicarX0, botaoMultiplicarY0 - 100, botaoMultiplicarX0 + tamanhoXbotoes, botaoMultiplicarY0 - 100 + tamanhoYbotoes);
-    CV::text (botaoMultiplicarX0, botaoMultiplicarY0 - 100 + tamanhoYbotoes * 1.5, "Gerar de novo");
+    CV::text (botaoMultiplicarX0 + 40, botaoMultiplicarY0 - 75, "Gerar");
 }
 
 void botaoMultiplicar (){
     CV::rect (botaoMultiplicarX0, botaoMultiplicarY0, botaoMultiplicarX0 + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes);
-    CV::text (botaoMultiplicarX0, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Multiplicar");
+    CV::text (botaoMultiplicarX0 + 15, botaoMultiplicarY0 + tamanhoYbotoes - 15, "Multiplicar");
 }
 
 void botaoDeterminante (){
     CV::rect (botaoDeterminanteX0, botaoMultiplicarY0, botaoDeterminanteX0 + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes);
-    CV::text (botaoDeterminanteX0, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Determinante");
+    CV::text (botaoDeterminanteX0 + 5, botaoMultiplicarY0 - 35 + tamanhoYbotoes * 1.5, "Determinante");
 }
 
 void botaoSomar (){
     CV::rect (botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes, botaoMultiplicarY0, botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes);
-    CV::text (botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Somar");
+    CV::text (botaoMultiplicarX0 + 40 + tamanhoXbotoes + espacoEntreBotoes, botaoMultiplicarY0 + tamanhoYbotoes - 15, "Somar");
 }
 
 void botaoSubtrair (){
     CV::rect (botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0, botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes);
-    CV::text (botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0 + tamanhoYbotoes * 1.5, "Subtrair");
+    CV::text (botaoMultiplicarX0 + 25 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes, botaoMultiplicarY0 - 35 + tamanhoYbotoes * 1.5, "Subtrair");
 }
 
 
@@ -184,7 +185,6 @@ void render()
         imprimeMatriz (matrizC, posicaoInicialMatrizA + 2 * espacoEntreMatrizes);
         colchete3 ();
         sinalIgual();
-        sinalX ();
         botaoDeterminante();
         CV::text (750, 200, "Determinante = ");
         CV::text (900, 200, calcularDeterminante(matrizC));
@@ -198,6 +198,7 @@ void render()
         colchete3 ();
         sinalSoma();
         sinalIgual();
+        botaoDeterminante();
     }
 
     //Subtrair - estagio 4 -> caso o usuario clique em subtrair, eh impressa a matriz C resultante e o sinal de subtracao
@@ -208,6 +209,7 @@ void render()
         colchete3 ();
         sinalSubtrair ();
         sinalIgual();
+        botaoDeterminante();
     }
 }
 
@@ -232,28 +234,33 @@ void gerarMatriz (int matriz [TAM][TAM]){
 //funcao para tratamento de mouse: cliques, movimentos e arrastos
 void mouse(int button, int state, int wheel, int direction, int x, int y)
 {
-   //printf("\nmouse %d %d %d %d %d %d", button, state, wheel, direction,  x, y);
+    bool botaoGerar = x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 - 100 && y < botaoMultiplicarY0 - 100 + tamanhoYbotoes;
+    bool botaoMultiplicar = x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes;
+    bool botaoDeterminante = x > botaoDeterminanteX0 && x < botaoDeterminanteX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes;
+    bool botaoSoma = x > botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes;
+    bool botaoSubtracao = x > botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes;
+
     if (state == 0){
         //aqui faco o tratamento do botao de gerar matrizes
-        if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 - 100 && y < botaoMultiplicarY0 - 100 + tamanhoYbotoes){
+        if (botaoGerar){
             gerarMatriz (matrizA);
             gerarMatriz (matrizB);
             estagio = 0;
         }
         //aqui faco o tratamento do botao de multiplicar
-        else if (x > botaoMultiplicarX0 && x < botaoMultiplicarX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
+        else if (botaoMultiplicar){
             estagio = 1;
         }
         //aqui faco o tratamento do botao determinante
-        else if (x > botaoDeterminanteX0 && x < botaoDeterminanteX0 + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
+        else if (botaoDeterminante){
             estagio = 2;
         }
         //aqui faco o tratamento do botao de soma
-        else if (x > botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + espacoEntreBotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
+        else if (botaoSoma){
             estagio = 3;
         }
         //e por fim, tratamento do botao de subtrair
-        else if (x > botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes && x < botaoMultiplicarX0 + tamanhoXbotoes + 2 * espacoEntreBotoes + tamanhoXbotoes + tamanhoXbotoes && y > botaoMultiplicarY0 && y < botaoMultiplicarY0 + tamanhoYbotoes){
+        else if (botaoSubtracao){
             estagio = 4;
         }
     }
